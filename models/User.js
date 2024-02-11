@@ -5,14 +5,14 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, "Username of minimum of 4 characters is required"],
-        min: 4
+        minlength: 4 // Using minlength instead of min
     },
 
     email: {
         type: String,
         validate: {
             validator: function(v) {
-                return v.includes('@');
+                return /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/.test(v); // Improved email regex
             },
             message: props => `${props.value} is not a valid email`
         },
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         validate: {
             validator: function(v) {
-                return /^[A-Za-z\s]/.test(v);
+                return /^[A-Za-z\s]+$/.test(v); // Improved city regex
             },
             message: `City name must contain only letters and spaces`,
         },
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         validate: {
             validator: function(v) {
-                return v.startsWith('http://') || v.startsWith('https://');
+                return /^(http|https):\/\//.test(v); // Improved website regex
             },
             message: 'Website must start with "http" or "https"',
         },
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         validate: {
             validator: function(v) {
-                return /d(5)-\d(4)/.test(v);
+                return /^\d{5}-\d{4}$/.test(v); // Corrected zipcode regex
             },
             message: props => `${props.value} is not a valid zipcode` 
         },
@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         validate: {
             validator: function(v) {
-                return /d(1)-\d(3)-\d(3)-\d(3)/.test(v);
+                return /^\d{1}-\d{3}-\d{3}-\d{3}$/.test(v); // Corrected phone regex
             },
             message: props => `${props.value} is not a valid phone number`
         },
